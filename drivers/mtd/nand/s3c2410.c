@@ -851,7 +851,7 @@ static void s3c2410_nand_init_chip(struct s3c2410_nand_info *info,
 
 	if (set->disable_ecc)
 		chip->ecc.mode	= NAND_ECC_NONE;
-
+	chip->ecc.mode = NAND_ECC_NONE;
 	switch (chip->ecc.mode) {
 	case NAND_ECC_NONE:
 		dev_info(info->device, "NAND ECC disabled\n");
