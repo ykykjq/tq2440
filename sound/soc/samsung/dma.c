@@ -103,7 +103,7 @@ static void dma_enqueue(struct snd_pcm_substream *substream)
 		prtd->params->ops->prepare(prtd->params->ch, &dma_info);
 
 		prtd->dma_loaded++;
-		pos += prtd->dma_period;
+		pos += prtd->dma_period*limit;
 		if (pos >= prtd->dma_end)
 			pos = prtd->dma_start;
 	}
