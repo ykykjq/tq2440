@@ -202,6 +202,7 @@ static struct platform_device *smdk2440_devices[] __initdata = {
 	&tq2440_audio,
 	&samsung_asoc_dma,
 	&s3c_device_sdi,
+	&s3c_device_rtc,
 };
 
 static void __init smdk2440_map_io(void)

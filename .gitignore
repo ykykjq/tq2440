@@ -9,6 +9,8 @@
 #
 # Normal rules
 #
+include/linux/version.h
+.config
 .*
 *.o
 *.o.*
