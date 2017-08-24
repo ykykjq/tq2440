@@ -46,9 +46,9 @@
 #include <plat/cpu.h>
 
 #include <plat/common-smdk.h>
-
+#include <sound/s3c24xx_uda134x.h>
 #include "common.h"
-
+#include "linux/dm9000.h"
 static struct map_desc smdk2440_iodesc[] __initdata = {
 	/* ISA IO Space map (memory space selected by A24) */
 
@@ -116,19 +116,19 @@ static struct s3c2410fb_display smdk2440_lcd_cfg __initdata = {
 
 	.type		= S3C2410_LCDCON1_TFT,
 
-	.width		= 240,
-	.height		= 320,
+	.width		= 480,
+	.height		= 272,
 
-	.pixclock	= 166667, /* HCLK 60 MHz, divisor 10 */
-	.xres		= 240,
-	.yres		= 320,
+	.pixclock	= 40000, /* HCLK 60 MHz, divisor 10 */
+	.xres		= 480,
+	.yres		= 272,
 	.bpp		= 16,
-	.left_margin	= 20,
-	.right_margin	= 8,
-	.hsync_len	= 4,
-	.upper_margin	= 8,
-	.lower_margin	= 7,
-	.vsync_len	= 4,
+	.left_margin	= 19,
+	.right_margin	= 10,
+	.hsync_len	= 30,
+	.upper_margin	= 4,
+	.lower_margin	= 2,
+	.vsync_len	= 8,
 };
 
 static struct s3c2410fb_mach_info smdk2440_fb_info __initdata = {
@@ -148,15 +148,59 @@ static struct s3c2410fb_mach_info smdk2440_fb_info __initdata = {
 	.gpdup_mask	= 0xffffffff,
 #endif
 
-	.lpcsel		= ((0xCE6) & ~7) | 1<<4,
+//	.lpcsel		= ((0xCE6) & ~7) | 1<<4,
+};
+static struct resource tq2440_dm9k_resource[] = {
+       [0] = DEFINE_RES_MEM(S3C2410_CS4, 4),
+       [1] = DEFINE_RES_MEM(S3C2410_CS4 + 4, 4),
+       [2] = DEFINE_RES_NAMED(IRQ_EINT7, 1, NULL, IORESOURCE_IRQ \
+                                               | IORESOURCE_IRQ_HIGHEDGE),
+};
+/*
+ * The DM9000 has no eeprom, and it's MAC address is set by
+ * the bootloader before starting the kernel.
+ */
+static struct dm9000_plat_data tq2440_dm9k_pdata = {
+       .flags          = (DM9000_PLATF_16BITONLY),
 };
 
+static struct platform_device tq2440_device_eth = {
+       .name           = "dm9000",
+       .id             = -1,
+       .num_resources  = ARRAY_SIZE(tq2440_dm9k_resource),
+       .resource       = tq2440_dm9k_resource,
+       .dev            = {
+               .platform_data  = &tq2440_dm9k_pdata,
+       },
+};
+static struct s3c24xx_uda134x_platform_data tq2440_audio_pins = {
+        .l3_clk = S3C2410_GPB(4),
+        .l3_mode = S3C2410_GPB(2),
+        .l3_data = S3C2410_GPB(3),
+        .model = UDA134X_UDA1341
+};
+
+static struct platform_device tq2440_audio = {
+        .name           = "s3c24xx_uda134x",
+        .id             = 0,
+        .dev            = {
+                .platform_data  = &tq2440_audio_pins,
+        },
+};
+static struct platform_device uda1341_codec = {
+                .name = "uda134x-codec",
+                .id = -1,
+};
 static struct platform_device *smdk2440_devices[] __initdata = {
 	&s3c_device_ohci,
 	&s3c_device_lcd,
 	&s3c_device_wdt,
 	&s3c_device_i2c0,
 	&s3c_device_iis,
+	&tq2440_device_eth,
+	&uda1341_codec,
+	&tq2440_audio,
+	&samsung_asoc_dma,
 };
 
 static void __init smdk2440_map_io(void)
