@@ -1,0 +1,14 @@
+root=/dev/nfs nfsroot=192.168.1.104:/home/book/project/busyroot ip=192.168.1.6:192.168.1.104:192.168.1.1:255.255.255.0::eth0:off init=/linuxrc console=ttySAC0,115200
+
+
+
+root=/dev/mtdblock2 init=/linuxrc console=ttySAC0,115200
+
+
+root=/dev/mmcblk0p1 init=/linuxrc console=ttySAC0,115200
+
+mount -t nfs -o nolock,vers=2 192.168.1.103:/home/book/project/busyroot /mnt
+
+ifconfig eth0 hw ether 10:23:45:67:89:ab
+ifconfig eth0 192.168.1.6 netmask 255.255.255.0 up
+routeadd default gw 192.168.1.2
