@@ -54,7 +54,7 @@ $(obj)/compressed/vmlinux: $(obj)/Image FORCE
 $(obj)/zImage:	$(obj)/compressed/vmlinux FORCE
 	$(call if_changed,objcopy)
 	@echo '  Kernel: $@ is ready'
-	cp $@ ~/project/zImage.bin
+	cp $@ ../zImage.bin
 endif
 
 targets += $(dtb-y)
