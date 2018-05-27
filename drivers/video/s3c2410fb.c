@@ -974,7 +974,8 @@ static int __devinit s3c24xxfb_probe(struct platform_device *pdev,
 			ret);
 		goto free_cpufreq;
 	}
-
+	
+	s3c2410fb_set_par(fbinfo);
 	/* create device files */
 	ret = device_create_file(&pdev->dev, &dev_attr_debug);
 	if (ret)

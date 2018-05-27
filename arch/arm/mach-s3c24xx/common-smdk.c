@@ -162,11 +162,13 @@ void __init smdk_machine_init(void)
 {
 	/* Configure the LEDs (even if we have no LED support)*/
 
+	s3c_gpio_cfgpin(S3C2410_GPG(4), S3C2410_GPIO_OUTPUT);
 	s3c_gpio_cfgpin(S3C2410_GPB(8), S3C2410_GPIO_OUTPUT);
 	s3c_gpio_cfgpin(S3C2410_GPB(5), S3C2410_GPIO_OUTPUT);
 	s3c_gpio_cfgpin(S3C2410_GPB(6), S3C2410_GPIO_OUTPUT);
 	s3c_gpio_cfgpin(S3C2410_GPB(7), S3C2410_GPIO_OUTPUT);
 
+	s3c2410_gpio_setpin(S3C2410_GPG(4), 1);
 	s3c2410_gpio_setpin(S3C2410_GPB(8), 0);
 	s3c2410_gpio_setpin(S3C2410_GPB(5), 0);
 	s3c2410_gpio_setpin(S3C2410_GPB(6), 1);
